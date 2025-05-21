@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\User;
 use Illuminate\Support\Facades\Request;
+
 
 class UsersController extends Controller{
 
     public function index(){
-        //ritorna tutti gli users
+        $users = User::all();
+        return view('users.index', compact('users'));
     }
     public function create(){
          //crea view
