@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\User;
-use Illuminate\Support\Facades\Request;
-
+//use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -15,12 +16,17 @@ class UsersController extends Controller
 
     public function create()
     {
-        //crea view
+        return view('users.create');
     }
 
     public function store(Request $request)
     {
-
+        User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']), // cripta la password
+        ]);
+        return redirect()->route('users.index');
     }
 
     public function edit($id)
@@ -31,14 +37,9 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-        ]);
         $user = User::findOrFail($id);
-        $user->update($validated);
+        $user->update($request->only(['name', 'email']));//update richiede array
         return redirect()->route('users.index')->with('success', 'Utente aggiornato con successo');
-
     }
 
     public function destroy($id)

@@ -2,7 +2,10 @@
 @section('title','Lista Utenti')
 @section('content')
 <div class="container mt-5">
-    <h1>Lista utenti</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Lista utenti</h1>
+        <a href="{{ route('users.create') }}" class="btn btn-dark">Aggiungi utente</a>
+    </div>
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
@@ -19,7 +22,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    <a class="btn btn-sm btn-primary me-1">Modifica</a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary me-1"> Modifica </a>
                     <form action="{{ url('/users/'.$user->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
