@@ -26,7 +26,7 @@
                     <form action="{{ url('/users/'.$user->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger me-1" onclick="return confirm('Sei sicuro di voler eliminare questo utente?')">Elimina</button>
+                        <button type="submit" class="btn btn-sm btn-danger me-1">Elimina</button>
                     </form>
                 </td>
             </tr>
