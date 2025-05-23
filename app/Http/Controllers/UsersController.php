@@ -21,11 +21,8 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']), // cripta la password
-        ]);
+        $this->validateUser($request);
+        User::create($request->all());
         return redirect()->route('users.index');
     }
 
@@ -37,17 +34,32 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $user->update($request->only(['name', 'email']));//update richiede array
-        return redirect()->route('users.index')->with('success', 'Utente aggiornato con successo');
+        $this->validateUserUpdate($request, $id);
+        $user = User::find($id);
+        $user->update($request->all());
+        return redirect()->route('users.index');
     }
-
     public function destroy($id)
     {
         if (User::find($id)) {
             $user = User::find($id);
             $user->delete();
-            return redirect()->route('users.index');
         }
+        return redirect()->route('users.index');
+    }
+    protected function validateUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email:rfc,dns',
+            'password' => 'required|string|min:4|',
+        ]);
+    }
+    protected function validateUserUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email:rfc,dns'
+        ]);
     }
 }
