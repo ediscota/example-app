@@ -4,6 +4,7 @@ use App\Models\User;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -21,8 +22,11 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        $this->validateUser($request);
-        User::create($request->all());
+        $validator = $this->validateUser($request);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        User::create(['name' => $request->input('name'), 'email' => $request->input('email'), 'password' => Hash::make($request->input('password')),]);
         return redirect()->route('users.index');
     }
 
@@ -34,7 +38,10 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validateUserUpdate($request, $id);
+        $validator = $this->validateUser($request);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         $user = User::find($id);
         $user->update($request->all());
         return redirect()->route('users.index');
@@ -49,17 +56,40 @@ class UsersController extends Controller
     }
     protected function validateUser(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email:rfc,dns',
-            'password' => 'required|string|min:4|',
-        ]);
+        $messages = [
+            'required' => 'Il campo :attribute è obbligatorio.',
+            'string' => 'Il campo :attribute deve essere una stringa.',
+            'email' => 'Il campo :attribute deve essere un indirizzo email valido.',
+            'min' => 'Il campo :attribute deve contenere almeno :min caratteri.',
+            'max' => 'Il campo :attribute non può superare i :max caratteri.',
+            'unique' => 'Il campo :attribute è già stato utilizzato.',
+        ];
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email:rfc,dns|unique:users,email',
+            'password' => 'required|string|min:4'
+        ];
+
+        return $validator = Validator::make($request->all(), $rules, $messages);
     }
     protected function validateUserUpdate(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email:rfc,dns'
-        ]);
+        $messages = [
+            'required' => 'Il campo :attribute è obbligatorio.',
+            'string' => 'Il campo :attribute deve essere una stringa.',
+            'email' => 'Il campo :attribute deve essere un indirizzo email valido.',
+            'unique' => 'La mail inserita è già stata usata.',
+        ];
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email:rfc,dns'
+            ]
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
     }
 }

@@ -22,11 +22,11 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary me-1"> Modifica </a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary me-1"> Modifica</a>
                     <form action="{{ url('/users/'.$user->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger me-1">Elimina</button>
+                        <button type="submit" class="btn btn-sm btn-danger delete-btn me-1">Elimina</button>
                     </form>
                 </td>
             </tr>

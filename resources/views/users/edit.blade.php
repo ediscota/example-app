@@ -11,7 +11,7 @@
                         </h2>
                         @if ($errors->any())
                             <div class="alert alert-danger rounded-3">
-                                <ul class="list-unstyled mb-0">
+                                <ul class="mb-0 ps-3">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
