@@ -3,18 +3,19 @@ namespace App\Http\Controllers;
 use App\Models\User;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $search = $request->input('search');
+        $users = DB::table('users')->when($search, function ($query, $search) {$query->where('name', 'like', "%$search%")->orWhere('email', 'like', "%$search%");})->get();
         return view('users.index', compact('users'));
     }
-
     public function create()
     {
         return view('users.create');
