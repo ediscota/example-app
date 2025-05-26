@@ -18,7 +18,7 @@
                 <button type="submit" class="btn btn-outline-dark w-100">Cerca</button>
             </div>
         </form>
-        <table class="table table-striped table-bordered">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
@@ -45,5 +45,9 @@
             @endforeach
             </tbody>
         </table>
+
+        <div class="mt-4 d-flex justify-content-center">
+            {{ $users->links() }}
+        </div>
     </div>
 @endsection

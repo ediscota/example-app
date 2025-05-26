@@ -13,7 +13,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $users = DB::table('users')->when($search, function ($query, $search) {$query->where('name', 'like', "%$search%")->orWhere('email', 'like', "%$search%");})->get();
+        $users = DB::table('users')->when($search, function ($query, $search) {$query->where('name', 'like', "%$search%")->orWhere('email', 'like', "%$search%");})->paginate(3)->withQueryString();
         return view('users.index', compact('users'));
     }
     public function create()
