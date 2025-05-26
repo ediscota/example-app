@@ -1,5 +1,5 @@
 @extends('structure')
-@section('title','Modifica Utente')
+@section('title', 'Login')
 @section('content')
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -7,7 +7,7 @@
                 <div class="card border-dark rounded-4 shadow-sm">
                     <div class="card-body p-4">
                         <h2 class="text-center text-dark mb-4">
-                            <i class="bi bi-pencil-square me-2"></i>Modifica Utente
+                            <i class="bi bi-person-circle me-2"></i>Login
                         </h2>
                         @if ($errors->any())
                             <div class="alert alert-danger rounded-3">
@@ -18,14 +18,8 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="POST" action="{{ route('users.store') }}">
+                        <form>
                             @csrf
-                            <div class="mb-3">
-                                <label for="name" class="form-label">
-                                    <i class="bi bi-person me-1"></i>Nome
-                                </label>
-                                <input type="text" name="name" class="form-control rounded-3 ps-4" placeholder="Inserisci nome">
-                            </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">
                                     <i class="bi bi-envelope me-1"></i>Email
@@ -38,9 +32,8 @@
                                 </label>
                                 <input type="password" name="password" class="form-control rounded-3 ps-4" placeholder="Inserisci password">
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-dark w-50 me-2 rounded-3">Salva</button>
-                                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary w-50 rounded-3">Annulla</a>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-dark w-50 rounded-3">Login</button>
                             </div>
                         </form>
                     </div>

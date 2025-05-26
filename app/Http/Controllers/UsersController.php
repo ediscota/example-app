@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
-
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -66,12 +65,12 @@ class UsersController extends Controller
             'unique' => 'Il campo :attribute è già stato utilizzato.',
         ];
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'name' => 'required|string|unique:users',
+            'email' => 'required|email:rfc,dns',
             'password' => 'required|string|min:4'
         ];
 
-        return $validator = Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules, $messages);
     }
     protected function validateUserUpdate(Request $request, $id)
     {
@@ -82,11 +81,8 @@ class UsersController extends Controller
             'unique' => 'La mail inserita è già stata usata.',
         ];
         $rules = [
-            'name' => 'required|string',
-            'email' => [
-                'required',
-                'email:rfc,dns'
-            ]
+            'name' => 'required|string|unique:users',
+            'email' => 'required|email:rfc,dns'
         ];
         return Validator::make($request->all(), $rules, $messages);
     }

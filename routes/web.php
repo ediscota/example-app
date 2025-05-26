@@ -7,4 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/users', UsersController::class);;
+Route::resource('/users', UsersController::class);
+Route::get('/login', function () {
+    return view('login');
+});
