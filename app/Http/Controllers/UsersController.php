@@ -39,7 +39,7 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = $this->validateUser($request);
+        $validator = $this->validateUserUpdate($request, $id);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -82,15 +82,12 @@ class UsersController extends Controller
             'unique' => 'La mail inserita è già stata usata.',
         ];
         $rules = [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'email' => [
                 'required',
                 'email:rfc,dns'
             ]
         ];
-        $validator = Validator::make($request->all(), $rules, $messages);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        return Validator::make($request->all(), $rules, $messages);
     }
 }
