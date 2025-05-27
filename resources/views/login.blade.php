@@ -18,7 +18,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form>
+                        <form method="POST" action="{{ route('login.perform') }}">
                             @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 
@@ -8,6 +9,6 @@ Route::get('/', function () {
 });
 
 Route::resource('/users', UsersController::class);
-Route::get('/login', function () {
-    return view('login');
-});
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
+
