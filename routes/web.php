@@ -11,4 +11,5 @@ Route::get('/', function () {
 Route::resource('/users', UsersController::class);
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
+Route::group(['middleware' => 'auth:web'], function(){});
 

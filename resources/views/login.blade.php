@@ -32,6 +32,9 @@
                                 </label>
                                 <input type="password" name="password" class="form-control rounded-3 ps-4" placeholder="Inserisci password">
                             </div>
+                            <div>
+                                //remember me
+                            </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-dark w-50 rounded-3">Login</button>
                             </div>

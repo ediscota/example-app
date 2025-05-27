@@ -18,11 +18,9 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/users'); // o una dashboard
+            return redirect('/users');
         }
-        return back()->withErrors([
-            'email' => 'Le credenziali non sono corrette.',
-        ])->onlyInput('email');
+        return back()->withErrors(['Credenziali errate']);
+
     } //devi anche implementare middleware
 }
