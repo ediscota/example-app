@@ -3,6 +3,9 @@
 @section('content')
     <div class="container mt-5">
         <div class="row align-items-center mb-3">
+            <div class="col-auto">
+                <a href="{{ route('users.create') }}" class="btn btn-dark">Logout</a>
+            </div>
             <div class="col">
                 <h1 class="m-0">Lista utenti</h1>
             </div>

@@ -12,15 +12,15 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        $request->validate([
+        //$credentials = $request->only('email', 'password');
+        /*$request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        if (Auth::attempt($credentials)) {
+        */
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect('/users');
         }
         return back()->withErrors(['Credenziali errate']);
-
     } //devi anche implementare middleware
 }
