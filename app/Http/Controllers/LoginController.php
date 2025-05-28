@@ -12,15 +12,16 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        //$credentials = $request->only('email', 'password');
-        /*$request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-        */
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect('/users');
         }
         return back()->withErrors(['Credenziali errate']);
-    } //devi anche implementare middleware
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
 }

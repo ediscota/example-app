@@ -11,7 +11,7 @@ class Authenticate
 {
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
-        if (Auth::guard($guard)->guest()) {
+        if (Auth::guard($guard)->guest()) { //se guard è null, di default è web
             return redirect('/login');
         }
         return $next($request);

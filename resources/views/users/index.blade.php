@@ -2,18 +2,21 @@
 @section('title','Lista Utenti')
 @section('content')
     <div class="container mt-5">
-        <div class="row align-items-center mb-3">
-            <div class="col-auto">
-                <a href="{{ route('users.create') }}" class="btn btn-dark">Logout</a>
+        <div class="row mb-3">
+            <div class="col d-flex justify-content-start">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-dark">Logout</button>
+                </form>
             </div>
-            <div class="col">
-                <h1 class="m-0">Lista utenti</h1>
-            </div>
-            <div class="col-auto">
+            <div class="col d-flex justify-content-end">
                 <a href="{{ route('users.create') }}" class="btn btn-dark">Aggiungi utente</a>
             </div>
         </div>
-        <form method="GET" action="{{ route('users.index') }}" class="row g-2 mb-4">
+        <div>
+            <h1 class="m-0">Lista utenti</h1>
+        </div>
+        <form method="GET" action="{{ route('users.index') }}" class="row g-2 mb-4 mt-2">
             <div class="col-md-10">
                 <input type="text" name="search" class="form-control" placeholder="Cerca per nome o email" } >
             </div>
