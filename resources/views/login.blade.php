@@ -33,7 +33,12 @@
                                 <input type="password" name="password" class="form-control rounded-3 ps-4" placeholder="Inserisci password">
                             </div>
                             <div>
-                                //remember me
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                                    <label class="form-check-label" for="remember">
+                                        Ricordami
+                                    </label>
+                                </div>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-dark w-50 rounded-3">Login</button>
