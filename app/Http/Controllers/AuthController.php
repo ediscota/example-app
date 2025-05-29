@@ -24,12 +24,8 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
-        try {
-            if (!$token = Auth::guard('api')->attempt($credentials)) { //guardia api e non più web
-                return response()->json(['error' => 'Invalid credentials'], 401);  //try catch non serve in laravel
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
         $refreshToken = Str::random(60);
         $cookie = Cookie::make(
