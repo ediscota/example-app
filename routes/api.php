@@ -13,9 +13,11 @@ Route::get('/test', function() {
 
 Route::prefix('v1')->group(function () {
 Route::post('/login', [AuthController::class, 'loginJWT'])->name('loginJWT');
-    Route::middleware('jwt')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
+Route::post('/logout', [AuthController::class, 'logout']);
+
+    //Route::middleware('jwt')->group(function () {
+     //   Route::post('/logout', [AuthController::class, 'logout']);
+   // });
     //capire perchè su Postman da errore 404 non trovando quella url, c'è qualcosa che non va nelle routes, nelle versioni precedenti in automatico faceva api/v1
 });
 

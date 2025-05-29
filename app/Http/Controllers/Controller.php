@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 abstract class Controller
 {
-    public function respondWithTokenCookie($token, $refreshToken, $cookie){
+    public function respondWithTokenCookie($token, $cookie){
 
         return response()->json([
             'token' => $token,

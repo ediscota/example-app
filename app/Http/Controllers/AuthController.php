@@ -39,6 +39,14 @@ class AuthController extends Controller
         );
         return $this->respondWithTokenCookie($token, $refreshToken, $cookie);
     }
+    public function logout()
+    {
+        Auth::guard('api')->logout();
+        $cookie = Cookie::forget('refresh_token');
+        return response()->json([
+            'message' => 'Logout effettuato con successo.'
+        ])->withCookie($cookie);
+    }
 
 
 }
