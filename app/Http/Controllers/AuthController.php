@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -37,16 +38,20 @@ class AuthController extends Controller
             true,            // secure (true in produzione, richiede HTTPS)
             true             // httpOnly
         );
-        return $this->respondWithTokenCookie($token, $refreshToken, $cookie);
+        DB::table('users')->where('id', Auth::guard('api')->id())->update(['refresh_token' => $refreshToken]);
+        return $this->respondWithTokenCookie($token, $cookie);
+
     }
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::guard('api')->logout();
+        $userId = Auth::guard('api')->id();
+        if ($userId) {
+            DB::table('users')->where('id', $userId)->update(['refresh_token' => '']);
+            Auth::guard('api')->logout();
+        }
         $cookie = Cookie::forget('refresh_token');
         return response()->json([
             'message' => 'Logout effettuato con successo.'
         ])->withCookie($cookie);
     }
-
-
 }

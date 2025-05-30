@@ -18,10 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
     //Route::middleware('jwt')->group(function () {
      //   Route::post('/logout', [AuthController::class, 'logout']);
    // });
-    //capire perchè su Postman da errore 404 non trovando quella url, c'è qualcosa che non va nelle routes, nelle versioni precedenti in automatico faceva api/v1
 });
 
-/*
-    Attualmente get http://localhost/example-app/public/api/test da 200, se levo le righe commentate no, o perlomeno
-    prima no, dato che prefix era api/v1, ma api era gia impostato su bootstrap/app.php quindi si doppiava.
-*/
+
+

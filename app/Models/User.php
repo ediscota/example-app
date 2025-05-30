@@ -24,6 +24,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'refresh_token'
     ];
 
     /**
@@ -34,6 +35,9 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+    protected $attributes = [
+        'refresh_token' => '' // Valore di default
     ];
 
     /**
