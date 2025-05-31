@@ -40,18 +40,51 @@ class AuthController extends Controller
         );
         DB::table('users')->where('id', Auth::guard('api')->id())->update(['refresh_token' => $refreshToken]);
         return $this->respondWithTokenCookie($token, $cookie);
-
     }
     public function logout(Request $request)
     {
-        $userId = Auth::guard('api')->id();
-        if ($userId) {
-            DB::table('users')->where('id', $userId)->update(['refresh_token' => '']);
-            Auth::guard('api')->logout();
+        //puoi prendere il refreshToken dal cookie, fai query selezionando l'user per il refreshToken e puoi pulire in questo modo il refreshToken dal Db,
+        //,invece che accedere grazie all'user autenticato, che se non è autenticato devi per forza sovrascrivere il refreshToken dato che non puoi accedere al DB per pulirllo
+        $refreshToken = $request->cookie('refresh_token');
+        if ($refreshToken) {
+            $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update(['refresh_token' => '']);
+            }
         }
+        Auth::guard('api')->logout();
         $cookie = Cookie::forget('refresh_token');
-        return response()->json([
-            'message' => 'Logout effettuato con successo.'
-        ])->withCookie($cookie);
+        return response()->json(['message' => 'Logout effettuato con successo.'])->withCookie($cookie);
+    }
+    public function getRefreshToken(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if (!$refreshToken) {
+            return response()->json(['error' => 'Refresh token non presente'], 404);
+        }
+        return response()->json(['refresh_token' => $refreshToken]);
+    }
+    public function refreshToken(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if (!$refreshToken) {
+            return response()->json(['error' => 'Refresh token mancante'], 401);
+        }
+        $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
+        if (!$user) {
+            return response()->json(['error' => 'Refresh token non valido'], 401);
+        }
+        $cookie = Cookie::make(
+            'refresh_token',
+            $refreshToken,
+            60 * 24 * 7,
+            '/',
+            null,
+            true,
+            true
+        );
+        //login() si differenzia da attempt usato in loginJWT perchè non vuole come param email e pw, usa direttamente l'utente già autenticato
+        $token = Auth::guard('api')->login(User::find($user->id));
+        return $this->respondWithTokenCookie($token, $cookie);
     }
 }

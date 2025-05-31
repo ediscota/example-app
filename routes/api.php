@@ -12,8 +12,10 @@ Route::get('/test', function() {
 });
 
 Route::prefix('v1')->group(function () {
-Route::post('/login', [AuthController::class, 'loginJWT'])->name('loginJWT');
+Route::post('/login', [AuthController::class, 'loginJWT']);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/get-refresh-token', [AuthController::class, 'getRefreshToken']);
+Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 
     //Route::middleware('jwt')->group(function () {
      //   Route::post('/logout', [AuthController::class, 'logout']);
