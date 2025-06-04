@@ -12,10 +12,6 @@ use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-/*
-    fai login jwt, la response.json fai una funzione come quella mandata su wa, poi devi generare tu un refreshToken
-    da 60 char (esiste func di laravel), e storarlo nel Cookie httpOnly (non nella risposta json)
-*/
 class AuthController extends Controller
 {
     public function loginJWT(Request $request)
@@ -43,37 +39,8 @@ class AuthController extends Controller
     }
     public function logout(Request $request)
     {
-        //puoi prendere il refreshToken dal cookie, fai query selezionando l'user per il refreshToken e puoi pulire in questo modo il refreshToken dal Db,
-        //,invece che accedere grazie all'user autenticato, che se non è autenticato devi per forza sovrascrivere il refreshToken dato che non puoi accedere al DB per pulirllo
         $refreshToken = $request->cookie('refresh_token');
-        if ($refreshToken) {
-            $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
-            if ($user) {
-                DB::table('users')->where('id', $user->id)->update(['refresh_token' => '']);
-            }
-        }
-        Auth::guard('api')->logout();
-        $cookie = Cookie::forget('refresh_token');
-        return response()->json(['message' => 'Logout effettuato con successo.'])->withCookie($cookie);
-    }
-    public function getRefreshToken(Request $request)
-    {
-        $refreshToken = $request->cookie('refresh_token');
-        if (!$refreshToken) {
-            return response()->json(['error' => 'Refresh token non presente'], 404);
-        }
-        return response()->json(['refresh_token' => $refreshToken]);
-    }
-    public function refreshToken(Request $request)
-    {
-        $refreshToken = $request->cookie('refresh_token');
-        if (!$refreshToken) {
-            return response()->json(['error' => 'Refresh token mancante'], 401);
-        }
-        $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
-        if (!$user) {
-            return response()->json(['error' => 'Refresh token non valido'], 401);
-        }
+        //inizializza il cookie con make
         $cookie = Cookie::make(
             'refresh_token',
             $refreshToken,
@@ -83,8 +50,46 @@ class AuthController extends Controller
             true,
             true
         );
-        //login() si differenzia da attempt usato in loginJWT perchè non vuole come param email e pw, usa direttamente l'utente già autenticato
-        $token = Auth::guard('api')->login(User::find($user->id));
+        if ($refreshToken) {
+            $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update(['refresh_token' => null]);//null
+                Auth::guard('api')->logout();
+            }
+            $cookie = Cookie::forget('refresh_token');
+        }
+        return response()->json(['message' => 'Logout effettuato con successo.'])->withCookie($cookie);//se non lo inizializzi qui problemi
+    }
+    public function getRefreshToken(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if (!$refreshToken) {
+            return response()->json(['error' => 'Refresh token non presente'], 401); //unauthorized
+        }
+        return response()->json(['refresh_token' => $refreshToken]);
+    }
+    public function refreshToken(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if (!$refreshToken) {
+            return response()->json(['error' => 'Refresh token non presente'], 401);
+        }
+        $user = DB::table('users')->where('refresh_token', $refreshToken)->first();
+        if (!$user) {
+            return response()->json(['error' => 'Refresh token non valido'], 401);
+        }
+        //crea un nuovo refreshtoken da mettere nel make, altrimenti utilizzi lo stesso di prima
+        $newRefreshToken = Str::random(60);
+        $cookie = Cookie::make(
+            'refresh_token',
+            $newRefreshToken,
+            60 * 24 * 7,
+            '/',
+            null,
+            true,
+            true
+        );
+        $token = Auth::guard('api')->tokenbyID($user->id);
         return $this->respondWithTokenCookie($token, $cookie);
     }
 }

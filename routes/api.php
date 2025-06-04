@@ -18,11 +18,8 @@ Route::post('/login', [AuthController::class, 'loginJWT']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/get-refresh-token', [AuthController::class, 'getRefreshToken']);
 Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-Route::get('/users', [UsersControllerAPI::class, 'getIndex'])->middleware('auth:api');
+Route::get('/users-comments', [UsersControllerAPI::class, 'getUsersWithComments'])->middleware('auth:api');
 
-    //Route::middleware('jwt')->group(function () {
-     //   Route::post('/logout', [AuthController::class, 'logout']);
-   // });
 });
 
 

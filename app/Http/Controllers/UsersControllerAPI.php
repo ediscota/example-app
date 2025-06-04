@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 class UsersControllerAPI extends Controller
 {
-    public function getIndex()
+    public function getUsersWithComments()
     {
-    $users = User::all();
-    return response()->json($users);
+        $users = User::with('comments')->get();
+        return response()->json($users);
     }
 }
