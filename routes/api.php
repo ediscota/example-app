@@ -19,7 +19,8 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/get-refresh-token', [AuthController::class, 'getRefreshToken']);
 Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 Route::get('/users-comments', [UsersControllerAPI::class, 'getUsersWithComments'])->middleware('auth:api');
-
+Route::get('/users/{userId}/roles', [UsersControllerAPI::class, 'getUserRoles']);//->middleware('auth:api');
+Route::get('/admins', [UsersControllerAPI::class, 'getAdmins']);//->middleware('auth:api');
 });
 
 

@@ -11,4 +11,17 @@ class UsersControllerAPI extends Controller
         $users = User::with('comments')->get();
         return response()->json($users);
     }
+
+    public function getUserRoles($userId)
+    {
+        $user = User::with('roles')->findOrFail($userId);
+        return response()->json($user);
+    }
+    public function getAdmins()
+    {
+        $admins = User::whereHas('roles', function ($query){
+            $query->where('name', 'Admin');})->get();
+        return response()->json($admins);
+    }
+
 }
