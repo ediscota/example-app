@@ -17,4 +17,5 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware([Authenticate::class])->group(function () {
     Route::resource('/users', UsersController::class);
+    Route::post('/users/import', [UsersController::class, 'import'])->name('users.import');
 });

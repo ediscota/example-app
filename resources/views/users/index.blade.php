@@ -1,16 +1,26 @@
 @extends('structure')
 @section('title','Lista Utenti')
 @section('content')
+    @include('include.modal')
+    @include('include.alerts')
+
     <div class="container mt-5">
-        <div class="row mb-3">
-            <div class="col d-flex justify-content-start">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-dark">Logout</button>
-                </form>
-            </div>
-            <div class="col d-flex justify-content-end">
-                <a href="{{ route('users.create') }}" class="btn btn-dark">Aggiungi utente</a>
+        <div class="container mt-5">
+            <div class="row mb-3 g-2">
+                <div class="col-md-4">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-dark w-100">Logout</button>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ route('users.create') }}" class="btn btn-dark w-100">Aggiungi utente</a>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Importa CSV
+                    </button>
+                </div>
             </div>
         </div>
         <div>
@@ -18,7 +28,7 @@
         </div>
         <form method="GET" action="{{ route('users.index') }}" class="row g-2 mb-4 mt-2">
             <div class="col-md-10">
-                <input type="text" name="search" class="form-control" placeholder="Cerca per nome o email" } >
+                <input type="text" name="search" class="form-control" placeholder="Cerca per nome o email" }>
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-outline-dark w-100">Cerca</button>
@@ -56,3 +66,5 @@
         </div>
     </div>
 @endsection
+
+

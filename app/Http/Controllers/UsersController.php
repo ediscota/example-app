@@ -2,10 +2,12 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 //use Illuminate\Support\Facades\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -85,5 +87,32 @@ class UsersController extends Controller
             'email' => 'required|email:rfc,dns'
         ];
         return Validator::make($request->all(), $rules, $messages);
+    }
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'csv_file' => 'required|file|mimes:csv,txt'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Formato file non valido. Carica un file CSV o TXT.');
+        }
+        $path = $request->file('csv_file')->store('imports'); // lo salva in storage/app/imports/
+        $file = Storage::path($path);
+        $handle = fopen($file, 'r');
+        $header = fgetcsv($handle);
+        while ($row = fgetcsv($handle)) {
+            $data = array_combine($header, $row);
+            try {
+                User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => bcrypt('default123')
+                ]);
+            } catch (QueryException $e) {
+                fclose($handle);
+                return redirect()->back()->with('error', "Errore durante l'importazione, stai inserendo un utente con una email già utilizzata");
+            }
+        }
+        return redirect()->route('users.index');
     }
 }
